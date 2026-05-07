@@ -65,3 +65,19 @@ order by 3 desc
 
 
 -- Customer Ranking (Window Function)
+select 
+    customer_id,
+    sum(quantity::float*unit_price::float) as total_spent,
+    rank() over (order by sum(quantity::float*unit_price::float) desc) as rk
+from retail_sales
+group by 1
+;
+
+-- Running total revenue
+
+select
+    invoice_date,
+    quantity::float*unit_price::float as revenue,
+    sum(quantity::float*unit_price::float) over (order by invoice_date) as running_total
+from retail_sales
+;
